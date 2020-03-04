@@ -368,26 +368,21 @@ def parse_author_affiliation(medline):
     return authors
 
 
-def date_extractor(journal, year_info_only):
+def date_extractor(journal):
     """Extract PubDate information from an Article in the Medline dataset.
 
     Parameters
     ----------
     journal: Element
         The 'Journal' field in the Medline dataset
-    year_info_only: bool
-        if True, this tool will only attempt to extract year information from PubDate.
-        if False, an attempt will be made to harvest all available PubDate information.
-        If only year and month information is available, this will yield a date of
-        the form 'YYYY-MM'. If year, month and day information is available,
-        a date of the form 'YYYY-MM-DD' will be returned.
 
     Returns
     -------
     PubDate: str
         PubDate extracted from an article.
-        Note: If year_info_only is False and a month could not be
-        extracted this falls back to year automatically.
+        Note: includes year, month and day possibly
+    PubYear: int
+        PubYear calculated 4-digits year
     """
     day = None
     month = None
@@ -396,11 +391,11 @@ def date_extractor(journal, year_info_only):
 
     if issue_date.find("Year") is not None:
         year = issue_date.find("Year").text
-        if not year_info_only:
-            if issue_date.find("Month") is not None:
-                month = month_or_day_formater(issue_date.find("Month").text)
-                if issue_date.find("Day") is not None:
-                    day = month_or_day_formater(issue_date.find("Day").text)
+        if issue_date.find("Month") is not None:
+            month = month_or_day_formater(issue_date.find("Month").text)
+            if issue_date.find("Day") is not None:
+                day = month_or_day_formater(issue_date.find("Day").text)
+
     elif issue_date.find("MedlineDate") is not None:
         year_text = issue_date.find("MedlineDate").text
         year = re.findall(r"\d{4}", year_text)
@@ -411,10 +406,15 @@ def date_extractor(journal, year_info_only):
     else:
         year = ""
 
-    if year_info_only or month is None:
-        return year
+    # convert year to digits
+    year_digits = None
+    if year != "":
+        year_digits = int(year)
+
+    if month is None:
+        return year, year_digits
     else:
-        return "-".join(str(x) for x in filter(None, [year, month, day]))
+        return "-".join(str(x) for x in filter(None, [year, month, day])), year_digits
 
 
 def parse_references(pubmed_article, reference_list):
@@ -472,7 +472,7 @@ def parse_references(pubmed_article, reference_list):
 
 
 def parse_article_info(
-    pubmed_article, year_info_only, nlm_category, author_list, reference_list
+    pubmed_article, nlm_category, author_list, reference_list
 ):
     """Parse article nodes from Medline dataset
 
@@ -480,8 +480,6 @@ def parse_article_info(
     ----------
     pubmed_article: Element
         The lxml element pointing to a medline document
-    year_info_only: bool
-        see more details in date_extractor()
     nlm_category: bool
         see more details in parse_medline_xml()
     author_list: bool
@@ -551,7 +549,7 @@ def parse_article_info(
     pmid = parse_pmid(pubmed_article)
     doi = parse_doi(pubmed_article)
     references = parse_references(pubmed_article, reference_list)
-    pubdate = date_extractor(journal, year_info_only)
+    (pubdate, pubyear) = date_extractor(journal)
     mesh_terms = parse_mesh_terms(medline)
     publication_types = parse_publication_types(medline)
     chemical_list = parse_chemical_list(medline)
@@ -564,6 +562,7 @@ def parse_article_info(
         "journal": journal_name,
         "authors": authors,
         "pubdate": pubdate,
+        "pubyear": pubyear,
         "pmid": pmid,
         "mesh_terms": mesh_terms,
         "publication_types": publication_types,
@@ -582,7 +581,6 @@ def parse_article_info(
 
 def parse_medline_xml(
     path,
-    year_info_only=True,
     nlm_category=False,
     author_list=False,
     reference_list=False,
@@ -594,15 +592,6 @@ def parse_medline_xml(
     ----------
     path: str
         The path
-    year_info_only: bool
-        if True, this tool will only attempt to extract year information from PubDate.
-        if False, an attempt will be made to harvest all available PubDate information.
-        If only year and month information is available, this will yield a date of
-        the form 'YYYY-MM'. If year, month and day information is available,
-        a date of the form 'YYYY-MM-DD' will be returned.
-        NOTE: the resolution of PubDate information in the Medline(R) database varies
-        between articles.
-        default: True
     nlm_category: bool
         if True, this will parse structured abstract where each section if original Label
         if False, this will parse structured abstract where each section will be assigned to
@@ -635,7 +624,7 @@ def parse_medline_xml(
     article_list = list(
         map(
             lambda m: parse_article_info(
-                m, year_info_only, nlm_category, author_list, reference_list
+                m, nlm_category, author_list, reference_list
             ),
             medline_citations,
         )

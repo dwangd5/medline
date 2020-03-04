@@ -1,6 +1,5 @@
 """
 Medline Parser: A Python Parser for PubMed MEDLINE XML Dataset
-Author: D Wang
 Adapted from: Titipat Achakulvisut, Daniel E. Acuna, github: https://github.com/titipata/pubmed_parser
 """
 __version__ = "0.1.0"
