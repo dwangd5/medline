@@ -4,7 +4,7 @@ Parsers for MEDLINE XML
 import re
 import numpy as np
 from itertools import chain
-from src.medline.utils import read_xml, stringify_children, month_or_day_formater
+from .utils import read_xml, stringify_children, month_or_day_formater
 
 __all__ = ["parse_medline_xml", "parse_medline_grant_id"]
 
