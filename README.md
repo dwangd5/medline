@@ -84,3 +84,15 @@ You should be able to see the following schema:
   'title': 'Labyrinthitis ossificans.'},
 ...
 </pre>
+
+### pyspark running in local
+pyspark program to parse medline xml.gz files into dataframe, and then write to mysql. 
+
+this is how to run it:
+
+<pre>
+# cd src/conf, and cp config.json.template to config.json, modify the contents to local env
+# in src folder, execute the following in medline conda virtual environment created above:
+source activate medline
+spark-submit --conf spark.driver.host=localhost --master local[2] --packages mysql:mysql-connector-java:8.0.19 spark/medline_spark.py 
+</pre>
