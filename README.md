@@ -24,16 +24,8 @@ Now the environment is ready for the parser
 #### simple test script of this parser
 You can use the following python script to test the parser functions:
 <pre>
-# first need to import the src directory to system path so that the medline package can be imported
-# change the src path to your local path
-import sys
-sys.path.append("/Users/dwangd5/Project/github/dwangd5/medline/src")
-import pprint
-import medline as med
-
-# change the data directory to your local path
-list = med.parse_medline_xml('data/pubmed20n0014.xml.gz')
-pprint.pprint(list)
+# in src folder, execute the following in medline conda virtual environment created above:
+python tests/test.py
 </pre>
 
 You should be able to see the following schema: 
