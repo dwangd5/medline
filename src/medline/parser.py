@@ -493,7 +493,7 @@ def parse_article_info(
         Dictionary containing information about the article, including
         `title`, `abstract`, `journal`, `authors`, `affiliations`, `pubdate`,
         `pmid`, `other_id`, `mesh_terms`, and `keywords`. The field
-        `delete` is always `False` because this function parses
+        `deleteflag` is always `False` because this function parses
         articles that by definition are not deleted.
     """
     medline = pubmed_article.find("MedlineCitation")
@@ -570,7 +570,7 @@ def parse_article_info(
         "keywords": keywords,
         "doi": doi,
         "references": references,
-        "delete": False,
+        "deleteflag": False,
     }
     if not author_list:
         dict_out.update({"affiliations": affiliations})
@@ -646,7 +646,7 @@ def parse_medline_xml(
             "keywords": np.nan,
             "publication_types": np.nan,
             "chemical_list": np.nan,
-            "delete": True,
+            "deleteflag": True,
             "medline_ta": np.nan,
             "nlm_unique_id": np.nan,
             "issn_linking": np.nan,
