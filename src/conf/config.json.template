@@ -1,0 +1,18 @@
+{
+  "mode": "mysql",
+  "mysql": {
+    "url": "jdbc:mysql://localhost:3306/medline",
+    "driver": "com.mysql.jdbc.Driver",
+    "dbtable": "articles",
+    "user": "<user>",
+    "password": "<password>"
+  },
+  "hive": {
+
+  },
+  "medline": {
+    "srcHome": "<project_source>",
+    "baseDir": "<local_directory_of_medline_base>",
+    "numSlices": 2
+  }
+}
