@@ -3,7 +3,7 @@ pmid string,
 pmc string,
 doi string,
 other_id string,
-title string
+title string,
 abstract string,
 authors string,
 mesh_terms string,
