@@ -1,6 +1,5 @@
 lxml==4.5.0
 Unidecode==1.1.1
 requests==2.23.0
-six==1.14.0
 numpy==1.18.1
 pyspark==2.3.2
