@@ -7,9 +7,6 @@
     "user": "<user>",
     "password": "<password>"
   },
-  "hive": {
-
-  },
   "medline": {
     "srcHome": "<project_source>",
     "baseDir": "<local_directory_of_medline_base>",
