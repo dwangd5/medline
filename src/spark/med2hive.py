@@ -11,8 +11,6 @@ if __name__ == '__main__':
     """Process downloaded MEDLINE folder to mysql database"""
     print("Process MEDLINE file to mysql")
 
-    print(config_set.get("medline"))
-
     spark = SparkSession \
         .builder \
         .appName("medline xml parser") \
