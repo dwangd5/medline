@@ -20,16 +20,20 @@ if __name__ == '__main__':
     hive = HiveWarehouseSession.session(spark).build()
     hive.setDatabase("medline")
 
-    path_rdd = sc.parallelize(glob("/tmp/medline/test/*.xml.gz"), numSlices=20)
+    path_rdd = sc.parallelize(glob("/tmp/medline/test/*.xml.gz"), numSlices=10)
 
-    print("-----------------" + str(path_rdd.count()))
+    # print("-----------------" + str(path_rdd.count()))
 
     parse_results_rdd = path_rdd. \
         flatMap(lambda x: [Row(file_name=os.path.basename(x), **publication_dict)
                            for publication_dict in med.parse_medline_xml(x)])
-    print("-----------------" + str(parse_results_rdd.count()))
+    # print("-----------------" + str(parse_results_rdd.count()))
     medline_df = parse_results_rdd.toDF()
 
-    medline_df.write.format("com.hortonworks.spark.sql.hive.llap.HiveWarehouseConnector").mode("overwrite").option("table", "articles").save()
+    medline_df.select("pmid", "pmc", "doi", "other_id", "title", "abstract", "authors", "mesh_terms", "publication_types", "keywords", "chemical_list", "pubdate", "pubyear", "journal", "medline_ta", "nlm_unique_id", "issn_linking", "country", "references", "deleteflag")\
+        .write.format("com.hortonworks.spark.sql.hive.llap.HiveWarehouseConnector")\
+        .mode("overwrite")\
+        .option("table", "articles")\
+        .save()
 
     sc.stop()
