@@ -17,6 +17,6 @@ medline_ta string,
 nlm_unique_id string,
 issn_linking string,
 country string,
-reference string,
+`references` string,
 deleteflag boolean
 );
