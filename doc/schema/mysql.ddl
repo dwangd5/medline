@@ -17,7 +17,7 @@ medline_ta varchar(1000),
 nlm_unique_id varchar(255),
 issn_linking varchar(255),
 country varchar(255),
-reference varchar(1000),
+references varchar(1000),
 deleteflag boolean,
 primary key(pmid)
 );
