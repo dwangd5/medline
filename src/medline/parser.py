@@ -638,6 +638,7 @@ def parse_medline_xml(
             "authors": np.nan,
             "affiliations": np.nan,
             "pubdate": np.nan,
+            "pubyear": np.nan,
             "pmid": p.text.strip(),
             "doi": np.nan,
             "other_id": np.nan,
