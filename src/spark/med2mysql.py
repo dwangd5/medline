@@ -43,4 +43,4 @@ if __name__ == '__main__':
         dbtable=config_set.get("mysql").get("dbtable"),
         user=config_set.get("mysql").get("user"),
         password=config_set.get("mysql").get("password")).mode('overwrite').save()
-    sc.stop()
+    spark.stop()
