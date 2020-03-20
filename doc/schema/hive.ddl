@@ -1,4 +1,4 @@
-create table articles (
+create table medline (
 pmid string,
 pmc string,
 doi string,
@@ -6,6 +6,7 @@ other_id string,
 title string,
 abstract string,
 authors string,
+affiliations string,
 mesh_terms string,
 publication_types string,
 keywords string,

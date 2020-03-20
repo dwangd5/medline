@@ -35,7 +35,7 @@ if __name__ == '__main__':
     sc = spark.sparkContext
 
     hive = HiveWarehouseSession.session(spark).build()
-    hive.setDatabase("medline")
+    hive.setDatabase("pubmed")
 
     url_rdd = sc.parallelize(listfile(url, ext), numSlices=20)
 
@@ -46,10 +46,10 @@ if __name__ == '__main__':
     # print("-----------------" + str(parse_results_rdd.count()))
     medline_df = parse_results_rdd.toDF()
 
-    medline_df.select("pmid", "pmc", "doi", "other_id", "title", "abstract", "authors", "mesh_terms", "publication_types", "keywords", "chemical_list", "pubdate", "pubyear", "journal", "medline_ta", "nlm_unique_id", "issn_linking", "country", "references", "deleteflag")\
+    medline_df.select("pmid", "pmc", "doi", "other_id", "title", "abstract", "authors", "affiliations", "mesh_terms", "publication_types", "keywords", "chemical_list", "pubdate", "pubyear", "journal", "medline_ta", "nlm_unique_id", "issn_linking", "country", "references", "deleteflag")\
         .write.format("com.hortonworks.spark.sql.hive.llap.HiveWarehouseConnector")\
         .mode("overwrite")\
-        .option("table", "articles")\
+        .option("table", "medline")\
         .save()
 
     spark.stop()
