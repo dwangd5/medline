@@ -1,15 +1,32 @@
-import sys
-sys.path.append(".")
-import os
-from glob import glob
-import medline as med
 from pyspark.sql import SparkSession
 from pyspark.sql import Row
 from pyspark_llap import HiveWarehouseSession
+import os
+import requests
+from bs4 import BeautifulSoup
+import gzip
+import io
+import medline as med
+
+url = 'http://d1trphadoop01/medline/base'
+ext = 'xml.gz'
+
+
+def listfile(url, ext):
+    page = requests.get(url).text
+    soup = BeautifulSoup(page, 'html.parser')
+    return [url + '/' + node.get('href') for node in soup.find_all('a') if node.get('href').endswith(ext)]
+
+
+def parse_url_gz_xml(url):
+    r = requests.get(url)
+    f = io.BytesIO(r.content)
+    return med.parse_medline_xml(gzip.GzipFile(fileobj=f))
+
 
 if __name__ == '__main__':
-    """Process downloaded MEDLINE folder to mysql database"""
-    print("Process MEDLINE file to mysql")
+    """Process downloaded MEDLINE folder to hive database"""
+    print("Process MEDLINE file to hive")
 
     spark = SparkSession \
         .builder \
@@ -20,13 +37,12 @@ if __name__ == '__main__':
     hive = HiveWarehouseSession.session(spark).build()
     hive.setDatabase("medline")
 
-    path_rdd = sc.parallelize(glob("/tmp/medline/test/*.xml.gz"), numSlices=10)
+    url_rdd = sc.parallelize(listfile(url, ext), numSlices=20)
 
     # print("-----------------" + str(path_rdd.count()))
 
-    parse_results_rdd = path_rdd. \
-        flatMap(lambda x: [Row(file_name=os.path.basename(x), **publication_dict)
-                           for publication_dict in med.parse_medline_xml(x)])
+    parse_results_rdd = url_rdd. \
+        flatMap(lambda url: [Row(file_name=os.path.basename(url), **publication_dict) for publication_dict in parse_url_gz_xml(url)])
     # print("-----------------" + str(parse_results_rdd.count()))
     medline_df = parse_results_rdd.toDF()
 
@@ -36,4 +52,4 @@ if __name__ == '__main__':
         .option("table", "articles")\
         .save()
 
-    sc.stop()
+    spark.stop()
