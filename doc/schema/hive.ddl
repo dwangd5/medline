@@ -48,10 +48,3 @@ country string,
 deleteflag boolean
 );
 
-# create consolidated table based on base and update2020:
-# memory out. need to fine tune memory
-create table medline as
-select * from
-(select * from base union select * from update2020) u
-where u.pmid not in
-(select pmid from update2020 where deleteflag is true);
