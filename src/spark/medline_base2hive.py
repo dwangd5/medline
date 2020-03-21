@@ -20,8 +20,6 @@ def listfile(url, ext):
 
 def parse_url_gz_xml(url):
     r = requests.get(url)
-    # maximum trial: 3
-    trial = 0
     if r.status_code == 200:
         f = io.BytesIO(r.content)
         return med.parse_medline_xml(gzip.GzipFile(fileobj=f))
@@ -45,11 +43,9 @@ if __name__ == '__main__':
 
     url_rdd = sc.parallelize(listfile(url, ext), numSlices=100)
 
-    # print("-----------------" + str(path_rdd.count()))
-
     parse_results_rdd = url_rdd. \
         flatMap(lambda url: [Row(file_name=os.path.basename(url), **publication_dict) for publication_dict in parse_url_gz_xml(url)])
-    # print("-----------------" + str(parse_results_rdd.count()))
+
     medline_df = parse_results_rdd.toDF()
 
     medline_df.select("pmid", "pmc", "doi", "other_id", "title", "abstract", "authors", "affiliations", "mesh_terms", "publication_types", "keywords", "chemical_list", "pubdate", "pubyear", "journal", "medline_ta", "nlm_unique_id", "issn_linking", "country", "references", "deleteflag")\
