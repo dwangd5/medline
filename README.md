@@ -21,6 +21,12 @@ pip install lxml==4.5.0
 </pre>
 Now the environment is ready for the parser
 
+Note: medline original parser (medline -> parser.py file) is borrowed from the following github repository:
+
+https://github.com/titipata/pubmed_parser
+
+Based on above, some customization were added.   
+
 #### simple test script of this parser
 You can use the following python script to test the parser functions:
 <pre>
