@@ -20,12 +20,18 @@ def listfile(url, ext):
 
 def parse_url_gz_xml(url):
     r = requests.get(url)
-    f = io.BytesIO(r.content)
-    return med.parse_medline_xml(gzip.GzipFile(fileobj=f))
+    # maximum trial: 3
+    trial = 0
+    if r.status_code == 200:
+        f = io.BytesIO(r.content)
+        return med.parse_medline_xml(gzip.GzipFile(fileobj=f))
+    else:
+        # todo: write this into log
+        print("-------failed to get file from web server: " + url)
 
 
 if __name__ == '__main__':
-    """Process downloaded MEDLINE folder to hive database"""
+    """Process downloaded MEDLINE (served with httpd) to hive database"""
     print("Process MEDLINE file to hive")
 
     spark = SparkSession \
@@ -37,7 +43,7 @@ if __name__ == '__main__':
     hive = HiveWarehouseSession.session(spark).build()
     hive.setDatabase("pubmed")
 
-    url_rdd = sc.parallelize(listfile(url, ext), numSlices=20)
+    url_rdd = sc.parallelize(listfile(url, ext), numSlices=100)
 
     # print("-----------------" + str(path_rdd.count()))
 
