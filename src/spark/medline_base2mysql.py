@@ -7,7 +7,7 @@ from pyspark.sql import SparkSession
 from pyspark.sql import Row
 from conf import config
 
-config_path = "conf/config.json"
+config_path = "conf/mysql.config.json"
 config_set = config.read(config_path)
 
 # directory

@@ -15,4 +15,4 @@ def read(config_path):
 
 
 if __name__ == '__main__':
-    read("config.json")
+    read("msyql.config.json")

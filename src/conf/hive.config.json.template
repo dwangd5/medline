@@ -1,0 +1,10 @@
+{
+  "hive": {
+    "host": <host>,
+    "port": <port>,
+    "database": <database>,
+    "username": <username>,
+    "auth": "KERBEROS",
+    "kerberos_service_name": "hive"
+  }
+}
