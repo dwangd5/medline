@@ -2,7 +2,7 @@ use pubmed;
 
 # create consolidated table based on base and update2020:
 # memory out. need to fine tune memory
-create table medline as
+create table medline_all as
 select * from
 (select * from base union select * from update2020) u
 where u.pmid not in
