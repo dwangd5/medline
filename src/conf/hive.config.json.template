@@ -6,5 +6,12 @@
     "username": <username>,
     "auth": "KERBEROS",
     "kerberos_service_name": "hive"
+  },
+  "mysql": {
+    "host": <host>,
+    "database": <db>,
+    "table": <table>
+    "user": <user>,
+    "password": <password>
   }
 }
