@@ -22,3 +22,11 @@ references varchar(1000),
 deleteflag boolean,
 primary key(pmid)
 );
+
+
+create table update_status (
+file_name varchar(255),
+update_date varchar(50),
+status bool,
+primary key(file_name)
+)
