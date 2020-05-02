@@ -103,6 +103,7 @@ class MedlineUpdate:
         return db
 
     def get_file_info(self):
+        """ unfortunately, there is a problem with the method. ftp.dir() cannot distinguish a time of 2019 vs 2020 """
         lines = []
         self.ftp.dir(".", lines.append)
 
