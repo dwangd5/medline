@@ -39,12 +39,15 @@ keywords string,
 chemical_list string,
 pubdate string,
 pubyear int,
+submitted_date string,
 journal string,
 medline_ta string,
 nlm_unique_id string,
 issn_linking string,
 country string,
 `references` string,
-deleteflag boolean
+deleteflag boolean,
+file_name string
 );
+
 
