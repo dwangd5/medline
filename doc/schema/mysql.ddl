@@ -25,8 +25,9 @@ primary key(pmid)
 
 
 create table update_status (
+id int auto_increment,
 file_name varchar(255),
 update_date varchar(50),
 status bool,
-primary key(file_name)
+primary key(id)
 )

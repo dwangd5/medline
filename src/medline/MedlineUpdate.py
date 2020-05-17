@@ -75,7 +75,7 @@ class MedlineUpdate:
 
                 try:
                     print(ftp_file_info[xmlgz])
-                    query = "insert into update_status values (%s, %s, %s)"
+                    query = "insert into update_status (file_name, update_date, status) values (%s, %s, %s)"
                     cursor.execute(query, ftp_file_info[xmlgz])
                     db.commit()
                 except Exception as e:
