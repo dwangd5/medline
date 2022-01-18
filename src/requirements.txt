@@ -4,4 +4,13 @@ requests==2.23.0
 numpy==1.18.1
 pyspark==2.3.2
 beautifulsoup4==4.8.2
-pyhive==0.6.1
+
+# coming from download script (test cluster)
+future==0.18.2
+PyHive==0.6.2
+PyMySQL==0.9.3
+python-dateutil==2.8.1
+sasl==0.2.1
+six==1.14.0
+thrift==0.13.0
+thrift-sasl==0.3.0
