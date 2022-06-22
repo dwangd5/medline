@@ -1,7 +1,7 @@
 lxml==4.5.0
 Unidecode==1.1.1
 requests==2.23.0
-numpy==1.18.1
+numpy==1.22.0
 pyspark==2.3.2
 beautifulsoup4==4.8.2
 pyhive==0.6.1
