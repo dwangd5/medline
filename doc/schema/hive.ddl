@@ -24,7 +24,7 @@ country string,
 deleteflag boolean
 );
 
-create table update2020 (
+create table update2024 (
 pmid string,
 pmc string,
 doi string,

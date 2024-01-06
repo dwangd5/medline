@@ -1,6 +1,5 @@
 from pyspark.sql import SparkSession
 from pyspark.sql import Row
-from pyspark_llap import HiveWarehouseSession
 import os
 import requests
 from bs4 import BeautifulSoup
@@ -8,7 +7,7 @@ import gzip
 import io
 import medline as med
 
-url = 'http://d1trphadoop01/medline/base'
+url = 'http://r1drlhadooprepo:8088/data/medline/baseline'
 ext = 'xml.gz'
 
 
@@ -35,11 +34,9 @@ if __name__ == '__main__':
     spark = SparkSession \
         .builder \
         .appName("medline xml parser") \
+        .enableHiveSupport() \
         .getOrCreate()
     sc = spark.sparkContext
-
-    hive = HiveWarehouseSession.session(spark).build()
-    hive.setDatabase("pubmed")
 
     url_rdd = sc.parallelize(listfile(url, ext), numSlices=100)
 
@@ -48,10 +45,13 @@ if __name__ == '__main__':
 
     medline_df = parse_results_rdd.toDF()
 
+    database_name = "pubmed"
+    # note: spark hive session cannot access to managed hive table, so it will create an external table below
+    table_name = "base_tmp"
+
     medline_df.select("pmid", "pmc", "doi", "other_id", "title", "abstract", "authors", "affiliations", "mesh_terms", "publication_types", "keywords", "chemical_list", "pubdate", "pubyear", "journal", "medline_ta", "nlm_unique_id", "issn_linking", "country", "references", "deleteflag")\
-        .write.format("com.hortonworks.spark.sql.hive.llap.HiveWarehouseConnector")\
+        .write \
         .mode("overwrite")\
-        .option("table", "medline")\
-        .save()
+        .saveAsTable(f"{database_name}.{table_name}")
 
     spark.stop()
